@@ -1,0 +1,3 @@
+if 123 abc 1.7e-2 "str\"ing" /* comentariu 1
+/* comentariu 2 */
+comentariu 3 */ 256

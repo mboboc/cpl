@@ -1,0 +1,1 @@
+În cadrul proiectului, va trebui să stabiliți corect varianta de JDK de pe sistemul vostru, precum și calea către fișierul antlr-4.8-complete.jar.
