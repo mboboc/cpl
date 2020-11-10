@@ -12,36 +12,7 @@ lexer grammar CPLangLexer;
 /* Cuvânt cheie.
  */
 IF : 'if';
-THEN: 'then';
-ELSE: 'else';
-FI: 'fi';
-TRUE: 'true';
-FALSE: 'false';
 
-/* Brakets
-*/
-OPENBRACKET: '(';
-CLOSEBRACKET: ')';
-OPENBRACE: '{';
-CLOSEBRACE: '}';
-
-/* Operators
-*/
-EQUAL: '=';
-PLUS: '+';
-MINUS: '-';
-MULTIPLY: '*';
-DIVISION: '/';
-LESS_THAN: '<';
-LESS_THAN_EQUAL: '<=';
-
-/* Symbols
-*/
-COMMA : ',';
-SEMICOLON : ';';
-
-/*
-*/
 /* Număr întreg.
  * 
  * fragment spune că acea categorie este utilizată doar în interiorul
@@ -53,21 +24,14 @@ INT : DIGIT+;
 /* Identificator.
  */
 fragment LETTER: [a-zA-Z];
-fragment LOWER_LETTER: [a-z];
-fragment UPPER_LETTER: [A-Z];
-
-ID : (LOWER_LETTER | '_')(LETTER | '_' | DIGIT)*;
-
-/* Types
-*/
-TYPE : [A-Z]LETTER*;
+ID : (LETTER | '_')(LETTER | '_' | DIGIT)*;
 
 /* Număr real.
  */
 fragment DIGITS : DIGIT+;
 fragment FRACTION : ('.' DIGITS?)?;
 fragment EXPONENT : ('e' ('+' | '-')? DIGITS)?;
-REAL : (DIGITS FRACTION | '.' DIGITS) EXPONENT;
+REAL : DIGITS FRACTION EXPONENT;
 
 /* Șir de caractere.
  * 
@@ -81,11 +45,8 @@ REAL : (DIGITS FRACTION | '.' DIGITS) EXPONENT;
  */
 STRING : '"' ('\\"' | .)*? '"'
     { System.out.println("there are no strings in CPLang, but shhh.."); };
-/* Comments
-*/
-LINE_COMMENT :  '//' .*? '\n'-> skip;
-BLOCK_COMMENT : '/*' (BLOCK_COMMENT | .)*? ('*/' | EOF {System.err.println("EOF");}) -> skip;
-RAMDOM_UNCOMPLETE_COMMENT : '*/' {System.err.println("Invalid comment");} -> skip;
+
+BLOCK_COMMENT : '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 /* Spații albe.
  * 
