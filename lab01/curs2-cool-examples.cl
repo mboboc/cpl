@@ -83,7 +83,8 @@ class Cons inherits List {
 class Main inherits IO {
 	--io : IO <- new IO; --void
 
-	main() : Object {{
+	main() : Object {
+		{
 
 		
 		-- let io : IO <- new Main
@@ -130,7 +131,8 @@ class Main inherits IO {
 
 		let m : Main <- new Main
 		in m.out_string("abc").fact_rec(5); -- daca tipul static Main, tipul intors de functie e tipul static
-	}};
+		}
+	;
 
 	fact_rec(n : Int) : Int {
 		-- nu poti sa lasi functia goala

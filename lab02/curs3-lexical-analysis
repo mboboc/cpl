@@ -32,8 +32,8 @@ Expresii regulate
 
  lexer --> ii spune antlr-ului ca vom avea doar reguli lexicale
 
-export CLASSPATH=".:<path-c˘atre-antlr>/antlr-4.8-complete.jar:$CLASSPATH"
+export CLASSPATH=".:/home/mada/an4/cpl/lab02/antlr-4.8-complete.jar:$CLASSPATH"
 
-alias antlr4=’java -jar <path-c˘atre-antlr>/antlr-4.8-complete.jar’
+alias antlr4=’java -jar /home/mada/an4/cpl/lab02/antlr-4.8-complete.jar’
 
 alias grun=’java org.antlr.v4.gui.TestRig’

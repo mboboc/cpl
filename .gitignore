@@ -1,2 +1,11 @@
 *.zip
 *.deb
+**/out/
+**/.idea/
+books/
+*.jar
+*.tokens
+*.class
+*.interp
+*.iml
+*.img

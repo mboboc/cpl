@@ -218,50 +218,57 @@ class Filter inherits IO {
 class Main inherits IO {
     main() : Object {
         {
-            let fib : Fibo <- New Fibo,
-                n : Int
+
+            let list : List <- new Cons
             in {
-                out_string("recursive fibonacci: ");
-                n <- fib.fibo_rec(5);
-                out_int(n);
-                out_string("\n");
-
-                out_string("iterative fibonacci: ");
-                n <- fib.fibo_iter(5);
-                out_int(n);
-                out_string("\n");
+                list <- new List.cons(1).cons(2);
+                list.append(new List.cons(1));
+                -- list.print();
             };
+            -- let fib : Fibo <- New Fibo,
+            --     n : Int
+            -- in {
+            --     out_string("recursive fibonacci: ");
+            --     n <- fib.fibo_rec(5);
+            --     out_int(n);
+            --     out_string("\n");
+
+            --     out_string("iterative fibonacci: ");
+            --     n <- fib.fibo_iter(5);
+            --     out_int(n);
+            --     out_string("\n");
+            -- };
 
 
-            let list : List <- new List.cons(1).cons(2).cons(3),
-                temp : List <- list,
-                c: MapCount <- new MapCount
-            in {
-                out_string("Map list: ");
-                --list <- list.append(new List.cons(21).cons(100));
-                --list <- list.reverse();
-                --list <- list.map(new MapCons);
-                list <- list.map(c);
-                out_string("Count = ");
-                out_int(c.getCount());
-                out_string("\n");
-                --out_string("\n");
-                -- -- Afișare utilizând o buclă while. Mecanismul de dynamic
-                -- -- dispatch asigură alegerea implementării corecte a metodei
-                -- -- isEmpty, din clasele List, respectiv Cons.
-                -- while (not temp.isEmpty()) loop
-                --     {
-                --         out_int(temp.hd());
-                --         out_string(" ");
-                --         temp <- temp.tl();
-                --     }
-                -- pool;
+            -- let list : List <- new List.cons(1).cons(2).cons(3),
+            --     temp : List <- list,
+            --     c: MapCount <- new MapCount
+            -- in {
+            --     out_string("Map list: ");
+            --     --list <- list.append(new List.cons(21).cons(100));
+            --     --list <- list.reverse();
+            --     --list <- list.map(new MapCons);
+            --     list <- list.map(c);
+            --     out_string("Count = ");
+            --     out_int(c.getCount());
+            --     out_string("\n");
+            --     --out_string("\n");
+            --     -- -- Afișare utilizând o buclă while. Mecanismul de dynamic
+            --     -- -- dispatch asigură alegerea implementării corecte a metodei
+            --     -- -- isEmpty, din clasele List, respectiv Cons.
+            --     -- while (not temp.isEmpty()) loop
+            --     --     {
+            --     --         out_int(temp.hd());
+            --     --         out_string(" ");
+            --     --         temp <- temp.tl();
+            --     --     }
+            --     -- pool;
 
-                -- out_string("\n");
+            --     -- out_string("\n");
 
-                -- Afișare utilizând metoda din clasele pe liste.
-                list.print();
-            };
+            --     -- Afișare utilizând metoda din clasele pe liste.
+            --     list.print();
+            -- };
         }
     };
 };

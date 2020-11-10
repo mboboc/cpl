@@ -8,7 +8,13 @@
 # Email		: madaeboboc@gmail.com
 ###############################################################################
 
+# Install ANLTR
+echo "Installing ANTLR 4.8..." 
+cd /usr/local/lib
+sudo curl -O http://www.antlr.org/download/antlr-4.8-complete.jar
+
 # Install Java-14, Spim, some random library
+echo "Installing Java 14..."
 sudo apt-get install openjdk-14-jdk spim libxkbcommon-x11-0 -y
 
 # Install QtSpim
