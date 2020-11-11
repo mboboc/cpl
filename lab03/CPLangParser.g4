@@ -12,16 +12,21 @@ options {
  * ce vor fi detaliate mai jos.
  */
 prog
-    :   ((definition | expr) SEMI)* EOF
+    : ((definition | expr) SEMI)* EOF
     ;
-   
-/* TODO1 Adaugă regula pentru definițiile de variabile
+
 /* Există definiții pentru variabile (opțional cu inițializare):
  * -> type name (= expr)?
  * și definiții pentru funcții:
  * -> type name (type name_formal1, type name_formal2, ..) { expr }.
  */
-definition:
+formal
+    : TYPE ID
+    ;
+
+definition
+    : TYPE ID (ASSIGN expr)?                                                        # varDef
+    | TYPE ID LPAREN (formal (COMMA formal)*)? RPAREN LBRACE expr RBRACE            # funcDef
 	;
 	
 /* Expresie.
@@ -60,12 +65,21 @@ definition:
  * cazul cond, thenBranch și elseBranch. În consecință, obiectul IfContext va
  * conține și câmpurile cond, thenBranch și elseBranch, având tipurile nodurilor
  * din arbore.
- * 
- * TODO1: Completează gramatica pentru regulile de mai sus.
- * Nu uita si de restul literalilor.
  */
+
 expr
-    :	IF cond=expr THEN thenBranch=expr ELSE elseBranch=expr FI	# if
-    |	ID                                                          # id
-    |	INT                                                         # int
+    : IF cond=expr THEN thenBranch=expr ELSE elseBranch=expr FI	  # if
+    | MINUS e=expr                                                  # negative
+    | ID                                                          # id
+    | INT                                                         # int
+    | BOOL                                                        # bool
+    | FLOAT                                                       # float
+    | ID ASSIGN (expr)                                            # assign
+    | ID LPAREN expr (COMMA expr)* RPAREN                         # funcall
+    | left=expr MULT right=expr                                   # mult
+    | left=expr DIV right=expr                                    # div
+    | left=expr PLUS right=expr                                   # add
+    | left=expr MINUS right=expr                                  # sub
+    | left=expr (EQUAL | LT | LE) right=expr                      # compare
+    | LPAREN e=expr RPAREN                                          # paren
     ;

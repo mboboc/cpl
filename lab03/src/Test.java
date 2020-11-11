@@ -41,9 +41,9 @@ public class Test {
     	/* Fișierul manual.txt conține un program CPLang.
     	 * Fișierul reference1-2.txt poate fi folosit ca referință.
     	 **/
-    	var parser = readFromFile("manual.txt");
+    	var parser = readFromFile("input2.txt");
     	
-    	/* TODO1 înlocuiește expr cu regula de start din gramatică */	
+    	/* Apelam regula de start din gramatică */
 		var tree = parser.prog();
 		System.out.println(tree.toStringTree(parser));
 		
@@ -59,21 +59,22 @@ public class Test {
         // constă în faptul că este parcurs întregul arbore de derivare, chiar
         // dacă pe noi ne intesează doar anumite noduri particulare.
         var listener = new CPLangParserBaseListener() {
-        	/* TODO2
-		     * Suprascrie metodele din Listener pentru a contoriza numărul
-		     * de definiții de variabile, atât globale cât și ca parametri
-		     * formali ai unor funcții și, separat, numărul
-		     * de definiții de funcții.
-		     * !!! Variabilele folosite pentru contori sunt varDefs și funcDefs.
-		     *
-		     * HINT: Uită-te în clasa CPLangParserBaseListener
-		     * la metodele exit<ETICHETA>, unde eticheta corespunde unei
-		     * reguli din gramatică. Trebuie să suprascrii cele 3 metode.
-		     */
-		    @Override public void exitVardef(CPLangParser.VardefContext ctx) { varDefs++; }
-		    @Override public void exitFuncdef(CPLangParser.FuncdefContext ctx) { funcDefs++; }
-		    @Override public void exitFormal(CPLangParser.FormalContext ctx) { varDefs++; }
-		     };
+
+			@Override
+			public void exitFormal(CPLangParser.FormalContext ctx) {
+				varDefs++;
+			}
+
+			@Override
+			public void exitVarDef(CPLangParser.VarDefContext ctx) {
+				varDefs++;
+			}
+
+			@Override
+			public void exitFuncDef(CPLangParser.FuncDefContext ctx) {
+				funcDefs++;
+			}
+		};
 
         // Un walker realizează o parcurgere în adâncime a arborelui de
         // derivare, invocând la momentul potrivit metodele enter/exit.
@@ -95,8 +96,7 @@ public class Test {
     	 * Fișierul reference3.txt continue output-ul corespunzător.
     	 **/
     	var parser = readFromFile("input3.txt");
-    	
-    	/* TODO3 înlocuiește expr cu regula de start */
+
     	var tree = parser.prog();
     	
 		Scanner s = new Scanner(new File("reference3.txt"));
@@ -122,7 +122,7 @@ public class Test {
 		 *
 		 * Pentru acest task, fiecare metodă visit va întoarce un Integer.
 		 * 
-		 * TODO3 
+		 *
 		 * Pentru acest task, programele CPLang vor conține doar
 		 * expresii aritmetice cu literali numerici, fără definiții sau
 		 * referiri la variabile!!!
@@ -146,41 +146,41 @@ public class Test {
 			
 				return 0;
 			}
-			
-			/* TODO3 Suprascrie visit<eticheta> unde eticheta corespunde
-			 * operațiilor aritmetice, operațiilor parantezate, minus-unar și
-			 * literalilor întregi */
 
-			@Override public Integer visitT3_paren(CPLangParser.T3_parenContext ctx) { return visit(ctx.t3()); }
-			
-			@Override public Integer visitT3_int(CPLangParser.T3_intContext ctx) {
-				return Integer.parseInt(ctx.INT().toString());
-			}
-			
-			@Override public Integer visitMult_op(CPLangParser.Mult_opContext ctx) { 
-				Integer left = visit(ctx.t3(0));
-				Integer right = visit(ctx.t3(1));
-				return left * right;
-			}
-			
-			@Override public Integer visitMinus_op(CPLangParser.Minus_opContext ctx) {
-				Integer left = visit(ctx.t3(0));
-				Integer right = visit(ctx.t3(1));
-				return left - right;
-			}
-			
-			@Override public Integer visitDiv_op(CPLangParser.Div_opContext ctx) {
-				Integer left = visit(ctx.t3(0));
-				Integer right = visit(ctx.t3(1));
-				return left / right;
-			}
-			
-			@Override public Integer visitPlus_op(CPLangParser.Plus_opContext ctx) {
-				Integer left = visit(ctx.t3(0));
-				Integer right = visit(ctx.t3(1));
-				return left + right;
+			@Override
+			public Integer visitAdd(CPLangParser.AddContext ctx) {
+				return visit(ctx.left) + visit(ctx.right);
 			}
 
+			@Override
+			public Integer visitSub(CPLangParser.SubContext ctx) {
+				return visit(ctx.left) - visit(ctx.right);
+			}
+
+			@Override
+			public Integer visitMult(CPLangParser.MultContext ctx) {
+				return visit(ctx.left) * visit(ctx.right);
+			}
+
+			@Override
+			public Integer visitDiv(CPLangParser.DivContext ctx) {
+				return visit(ctx.left) / visit(ctx.right);
+			}
+
+			@Override
+			public Integer visitNegative(CPLangParser.NegativeContext ctx) {
+				return -visit(ctx.e);
+			}
+
+			@Override
+			public Integer visitInt(CPLangParser.IntContext ctx) {
+				return Integer.parseInt(ctx.getText());
+			}
+
+			@Override
+			public Integer visitParen(CPLangParser.ParenContext ctx) {
+				return visit(ctx.e);
+			}
 		};
 	
 		visitor.visit(tree);	
