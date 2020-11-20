@@ -8,7 +8,7 @@ options {
 }
 
 prog
-    :   ((definition | expr) SEMI)* EOF
+    :   ((d=definition | e=expr) SEMI)* EOF
     ;
 
 definition

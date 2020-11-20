@@ -97,29 +97,3 @@ BLOCK_COMMENT
  * skip spune că nu este creat niciun token pentru lexemul depistat.
  */
 WS : [ \n\r\t]+ -> skip;
-
-/* Modalitate alternativă de recunoaștere a șirurilor de caractere, folosind
- * moduri lexicale.
- * 
- * Un mod lexical, precum cel implicit (DEFAULT_MODE) sau IN_STR, de mai jos,
- * reprezintă stări ale analizorului. Când analizorul se află într-un anumit
- * mod, numai regulile din acel mod se pot activa.
- * 
- * Folosim pushMode și popMode pentru intra și ieși din modurile lexicale,
- * în regim de stivă.
- * 
- * more spune că deocamdată nu este construit un token, dar lexemul identificat
- * va face parte, cumulativ, din lexemul recunoscut de următoarea regulă.
- * 
- * De-abia la recunoașterea caracterului '"' de sfârșit de șir de către regula
- * STR, se va construi un token cu categoria STR și întregul conținut al șirului
- * drept lexem.
- */
-/*
-STR_OPEN : '"' -> pushMode(IN_STR), more;
-
-mode IN_STR;
-
-STR : '"' -> popMode;
-CHAR : ('\\"' | ~'"') -> more;  // ~ = complement
-*/
