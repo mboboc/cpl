@@ -9,26 +9,49 @@ public class ResolutionPassVisitor implements ASTVisitor<Void> {
 
   @Override
   public Void visit(Assign assign) {
-    if (assign.id.getSymbol() instanceof FunctionSymbol) {
-      ASTVisitor.error(assign.id.getToken(), assign.id.getToken().getText() + "cannot assign");
+    var id = assign.id;
+    var expr = assign.expr;
+    var sym = id.getSymbol();
 
+    if (sym instanceof FunctionSymbol) {
+      ASTVisitor.error(id.getToken(), id.getToken().getText() + " is not a variable"
+      );
       return null;
     }
 
-    assign.id.accept(this);
-    assign.expr.accept(this);
+    if (sym == null) {
+      ASTVisitor.error(id.getToken(),
+              "variable " + id.getToken().getText() + " in assignment doesn't exist"
+      );
+      return null;
+    }
+
+    id.accept(this);
+    expr.accept(this);
     return null;
   }
 
   @Override
   public Void visit(Call call) {
-    if (call.id.getScope().lookup(call.id.token.getText()) == null) {
-      ASTVisitor.error(call.id.getToken(), call.id.getToken().getText());
+    // Verificăm dacă funcția există în scope. Nu am putut face
+    // asta în prima trecere din cauza a forward declarations.
+    //
+    // De asemenea, verificăm că Id-ul pe care se face apelul de funcție
+    // este, într-adevăr, o funcție și nu o variabilă.
+    var id = call.id;
+
+    var sym = id.getScope().lookup(id.getToken().getText());
+
+    if (!(id.getSymbol() instanceof FunctionSymbol)) {
+      ASTVisitor.error(id.getToken(), id.getToken().getText() + " not a function"
+      );
       return null;
     }
 
-    for (Expression expression : call.args) {
-      expression.accept(this);
+    if (sym == null) {
+      ASTVisitor.error(id.getToken(), id.getToken().getText() + " function undefined"
+      );
+      return null;
     }
 
     return null;

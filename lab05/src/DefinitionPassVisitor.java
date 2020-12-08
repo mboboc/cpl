@@ -33,15 +33,14 @@ public class DefinitionPassVisitor implements ASTVisitor<Void> {
   @Override
   public Void visit(VarDef varDef) {
     var id = varDef.id;
-    var symbol = new IdSymbol(id.getToken().getText());
+    var sym = new IdSymbol(varDef.id.getToken().getText());
+    id.setSymbol(sym);
 
-    if (!currentScope.add(symbol)) {
-      ASTVisitor.error(id.getToken(), id.getToken().getText());
+    if (!currentScope.add(sym))
+      ASTVisitor.error(id.getToken(),
+              id.getToken().getText() + " redefined");
 
-      return null;
-    }
-
-    id.setSymbol(symbol);
+    id.setSymbol(sym);
 
     if (varDef.initValue != null)
       varDef.initValue.accept(this);
@@ -52,33 +51,34 @@ public class DefinitionPassVisitor implements ASTVisitor<Void> {
   @Override
   public Void visit(FuncDef funcDef) {
     var id = funcDef.id;
-    var symbol = new FunctionSymbol(id.getToken().getText(), currentScope);
+    var sym = new FunctionSymbol(id.getToken().getText(), currentScope);
 
-    if (!currentScope.add(symbol)) {
-      ASTVisitor.error(id.getToken(), id.getToken().getText());
-      return null;
-    }
+    if (!currentScope.add(sym))
+      ASTVisitor.error(funcDef.id.getToken(),
+              funcDef.id.getToken().getText() + " function redefined");
 
-    funcDef.id.setSymbol(symbol);
+    id.setSymbol(sym);
 
-    currentScope = symbol;
+    currentScope = sym;
     for (var formal : funcDef.formals) {
       formal.accept(this);
     }
-    funcDef.body.accept(this);
-    currentScope = symbol.getParent();
 
+    funcDef.body.accept(this);
+    currentScope = sym.getParent();
     return null;
   }
 
   @Override
   public Void visit(Formal formal) {
+    // Adăugăm simbolul în domeniul de vizibilitate curent(practic domeniul de vizibilitate dat
+    // de funcția al cărei parametru este parametrul formal curent).
     var id = formal.id;
     var symbol = new IdSymbol(id.getToken().getText());
 
     if (!currentScope.add(symbol)) {
-      ASTVisitor.error(id.getToken(), id.getToken().getText());
-
+      ASTVisitor.error(id.getToken(), id.getToken().getText() + " formal undefined"
+      );
       return null;
     }
 

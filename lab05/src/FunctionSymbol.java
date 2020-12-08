@@ -1,10 +1,11 @@
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 // O functie este atât simbol, cât și domeniu de vizibilitate pentru parametrii
 // săi formali.
+
 public class FunctionSymbol extends IdSymbol implements Scope {
-  Map<String, Symbol> symbols = new LinkedHashMap<>();
+  HashMap<String, Symbol> symbols = new LinkedHashMap<>();
   Scope parent;
 
   public FunctionSymbol(String name, Scope parent) {
@@ -14,7 +15,9 @@ public class FunctionSymbol extends IdSymbol implements Scope {
 
   @Override
   public boolean add(Symbol s) {
-    if (symbols.containsKey(s.getName()))
+    String name = s.getName();
+
+    if (symbols.containsKey(name))
       return false;
 
     symbols.put(s.getName(), s);
@@ -24,16 +27,16 @@ public class FunctionSymbol extends IdSymbol implements Scope {
 
   @Override
   public Symbol lookup(String s) {
-    var symbol = symbols.get(s);
+    var sym = symbols.get(s);
 
-    if (symbol != null)
-      return parent.lookup(s);
+    if (sym != null)
+      return sym;
 
-    return null;
+    return this.getParent().lookup(s);
   }
 
   @Override
   public Scope getParent() {
-    return parent;
+    return this.parent;
   }
 }
